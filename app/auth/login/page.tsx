@@ -6,6 +6,9 @@ import { toast } from "react-toastify";
 import Toastify from "@/app/components/Toasitfy";
 
 function login() {
+  //set title
+  window.document.title = "Login | COMMIT";
+
   const router = useRouter();
   const { data: session, status } = useSession();
   const [userInfo, setUserInfo] = React.useState({ username: "", password: "" });
