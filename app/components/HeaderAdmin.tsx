@@ -2,6 +2,7 @@ import React from "react";
 import { FiLogOut } from "react-icons/fi";
 import { BiSun, BiMoon } from "react-icons/bi";
 import { useTheme } from "../context/ThemeProvider";
+import { signOut } from "next-auth/react";
 
 export default function HeaderAdmin() {
   const { theme, toggleTheme } = useTheme();
@@ -25,7 +26,9 @@ export default function HeaderAdmin() {
         <div className="divider divider-horizontal"></div>
         <div className="flex items-center">
           <div className="tooltip tooltip-left" data-tip="Logout">
-            <FiLogOut className="text-2xl" />
+            <button className="btn btn-ghost btn-circle" onClick={() => signOut()}>
+              <FiLogOut className="text-2xl" />
+            </button>
           </div>
         </div>
       </div>
