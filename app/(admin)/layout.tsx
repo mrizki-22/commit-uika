@@ -8,11 +8,6 @@ import { useTheme } from "../context/ThemeProvider";
 
 const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
 
-export const metadata = {
-  title: "Admin | Commit UIKA",
-  description: "Dashboard Admin UKM Community Of Information Technology (COMMIT) Universitas Ibn Khaldun Bogor",
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // redirect to auth/signin if not logged in
   const { data: session, status } = useSession();
