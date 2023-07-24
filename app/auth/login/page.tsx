@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Toastify from "@/app/components/Toasitfy";
 
-function login() {
+function Login() {
   //set title
   window.document.title = "Login | COMMIT";
 
@@ -65,4 +65,4 @@ function login() {
   );
 }
 
-export default login;
+export default Login;
