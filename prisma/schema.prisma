@@ -6,14 +6,19 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
-  username String @unique
-  password String
-  role String
-}
 
+model Anggota {
+  id Int @id @default(autoincrement())
+  nama String
+  fakultas String
+  prodi String
+  no_telp String
+  email String
+  alamat String
+  angkatan Int
+  status String
+}
