@@ -20,18 +20,18 @@ function Sidebar() {
   }
 
   return (
-    <div className={`flex flex-col space-y-3 fixed h-screen ${theme === "light" ? "bg-neutral text-white" : "bg-primary text-primary-content"}  lg:w-60 md:w-40 w-16 `}>
-      <div className="flex items-center space-x-2 lg:justify-around justify-center w-full px-3 py-3">
+    <div className={`flex flex-col  fixed h-screen ${theme === "light" ? "bg-neutral text-white" : "bg-primary text-primary-content"}  lg:w-60 md:w-40 w-16 `}>
+      <div className="flex items-center space-x-2 lg:justify-around justify-center w-full px-3 py-[22px]">
         <Image src="/logo-shadow.png" alt="logo" width="50" height="50" />
         <div className="flex flex-col space-y-0">
-          <p className="text-xs font-bold lg:block hidden">Community of Information Technology</p>
+          <p className="text-xs font-semibold lg:block hidden">Community of Information Technology</p>
         </div>
       </div>
 
       <div>
         <Link
           href="/dashboard"
-          className={`flex items-center md:justify-start justify-center space-x-2 px-3 py-3 duration-200 ${theme === "light" ? "hover:bg-white hover:text-neutral " : "hover:bg-base-100 hover:text-base-content"} ${
+          className={`flex items-center md:justify-start justify-center space-x-2  px-3 py-3 duration-200 ${theme === "light" ? "hover:bg-white hover:text-neutral " : "hover:bg-base-100 hover:text-base-content"} ${
             currentPath === "/dashboard" ? active : ""
           } `}
         >
