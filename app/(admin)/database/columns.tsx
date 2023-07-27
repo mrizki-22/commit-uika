@@ -24,7 +24,7 @@ export type Anggota = {
   no_telp: string;
   email: string;
   alamat: string;
-  angkatan: number;
+  angkatan: string;
   status: string;
 };
 

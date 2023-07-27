@@ -3,22 +3,16 @@ import { DataTable } from "./data-table";
 import { BiSolidDashboard } from "react-icons/bi";
 import { BsFillDatabaseFill } from "react-icons/bs";
 import Link from "next/link";
+import axios from "axios";
 
 async function getData(): Promise<Anggota[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: 1,
-      nama: "Muhammad Rizky Saputra",
-      fakultas: "Fakultas Ilmu Komputer",
-      prodi: "Teknik Informatika",
-      no_telp: "081234567890",
-      email: "abc@gmail.com",
-      alamat: "Jl. Raya ITS RT03/01 Kel Badak Agung Kec. Sukarame Bandar Lampung",
-      angkatan: 2019,
-      status: "Anggota Biasa",
-    },
-  ];
+  try {
+    const response = await axios.get(`${process.env.BASE_URL}/api/anggota`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
 
 export default async function Page() {
