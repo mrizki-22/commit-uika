@@ -1,10 +1,104 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState, FormEventHandler } from "react";
 import { BiSolidDashboard } from "react-icons/bi";
 import { BsFillDatabaseFill } from "react-icons/bs";
 import { MdAdd } from "react-icons/md";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
+type Anggota = {
+  nama: string;
+  fakultas: string | null;
+  prodi: string | null;
+  no_telp: string | null;
+  email: string | null;
+  alamat: string | null;
+  angkatan: string | null;
+  status: string | null;
+};
 
 function Page() {
+  // data fakultas, jurusan, angkatan, status
+  const fakultas = ["Fakultas Keguruan dan Ilmu Pendidikan", "Fakultas Hukum", "Fakultas Ekonomi dan Bisnis", "Fakultas Agama Islam", "Fakultas Teknik dan Sains", "Fakultas Ilmu Kesehatan"];
+  const jurusan = [
+    ["Pendidikan Bahasa Inggris", "Pendidikan Luar Sekolah", "Teknologi Pendidikan", "Pendidikan Vokasional Desain Fashion", "Pendidikan Profesi Guru"],
+    ["Ilmu Hukum"],
+    ["Manajemen", "Akuntansi", "Bisnis Digital", "Perdagangan Internasional"],
+    [
+      "Hukum Keluarga Islam",
+      "Pendidikan Agama Islam",
+      "Komunikasi Penyiaran Islam",
+      "Ekonomi Syariah",
+      "Pendidikan Guru Madrasah Ibtidaiyah",
+      "Bimbingan Konseling dan Pendidikan Islam",
+      "Manajemen Haji dan Umrah",
+      "Ilmu Al-Quran dan Tafsir",
+    ],
+    ["Teknik Sipil", "Teknik Mesin", "Teknik Elektro", "Teknik Informatika", "Sistem Informasi", "Rekayasa Pertanian dan Biosistem", "Ilmu Lingkungan"],
+    ["Kesehatan Masyarakat", "Gizi"],
+  ];
+  const angkatan = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+  const status = ["Anggota Muda", "Anggota Biasa", "Dewan Alumni", "Anggota Kehormatan"];
+
+  const router = useRouter();
+  const [selectJurusan, setSelectJurusan] = useState<string[]>([]);
+
+  //create handleSelect function to display jurusan based on fakultas id
+  const handleSelect = (e: any): void => {
+    const selectElement = e.target;
+    const selectedIndex = selectElement.selectedIndex;
+    const selectedOption = selectElement.options[selectedIndex];
+    const fakultasId = selectedOption.tabIndex;
+    setSelectJurusan(jurusan[fakultasId]);
+  };
+
+  // create handle submit function
+  const handleSubmit: FormEventHandler = async (e) => {
+    e.preventDefault();
+    //create form data typescript
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    //avoid null value at fakultas
+    const fakultasValue = formData.get("fakultas");
+    const fakultas = fakultasValue !== null ? fakultasValue : "";
+
+    //avoid null value at prodi
+    const prodiValue = formData.get("prodi");
+    const prodi = prodiValue !== null ? prodiValue : "";
+
+    //avoid null value at angkatan
+    const angkatanValue = formData.get("angkatan");
+    const angkatan = angkatanValue !== null ? angkatanValue : "";
+
+    //avoid null value at status
+    const statusValue = formData.get("status");
+    const status = statusValue !== null ? statusValue : "";
+
+    try {
+      const data: Anggota = {
+        nama: formData.get("nama") as string,
+        fakultas: fakultas as string,
+        prodi: prodi as string,
+        no_telp: formData.get("no_telp") as string,
+        email: formData.get("email") as string,
+        alamat: formData.get("alamat") as string,
+        angkatan: angkatan as string,
+        status: status as string,
+      };
+      const res = await axios.post("/api/anggota", data);
+
+      if (res.status === 200) {
+        toast.success("Data berhasil ditambahkan");
+        router.push("/database");
+      }
+    } catch (err) {
+      toast.error("Data gagal ditambahkan");
+      console.log(err);
+    }
+  };
+
   return (
     <div className="container mx-auto">
       <div className="text-xs breadcrumbs">
@@ -31,6 +125,120 @@ function Page() {
       </div>
       <div>
         <h1 className="font-semibold text-2xl">Tambah Data Anggota</h1>
+      </div>
+      <div className="mt-5">
+        <form onSubmit={handleSubmit}>
+          <div className="flex md:flex-row flex-col w-full">
+            <div className="flex flex-col space-y-2 w-full">
+              {/* Nama lengkap */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="nama">
+                  <span className="label-text">Nama Lengkap:</span>
+                </label>
+                <input id="nama" name="nama" type="text" placeholder="Ketik disini" className="input border-base-content w-full" required />
+              </div>
+
+              {/* Fakultas */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="fakultas">
+                  <span className="label-text">Fakultas:</span>
+                </label>
+                <select id="fakultas" name="fakultas" className="select border-base-content w-full" onChange={handleSelect}>
+                  <option disabled selected value={""}>
+                    Pilih Fakultas
+                  </option>
+                  {fakultas.map((fakultas, index) => (
+                    <option key={index} value={fakultas} tabIndex={index}>
+                      {fakultas}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Prodi */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="prodi">
+                  <span className="label-text">Program Studi:</span>
+                </label>
+                <select id="prodi" name="prodi" className="select border-base-content w-full">
+                  <option disabled selected value={""}>
+                    Pilih Prodi
+                  </option>
+                  {selectJurusan.map((jurusan, index) => (
+                    <option key={index} value={jurusan}>
+                      {jurusan}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* {No telp */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="no_telp">
+                  <span className="label-text">No Telp:</span>
+                </label>
+                <input id="no_telp" name="no_telp" type="number" placeholder="Ketik disini" className="input border-base-content w-full" />
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full space-y-2">
+              {/* email */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="email">
+                  <span className="label-text">Email:</span>
+                </label>
+                <input id="email" name="email" type="text" placeholder="Ketik disini" className="input border-base-content w-full" />
+              </div>
+
+              {/* alamat */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="alamat">
+                  <span className="label-text">Alamat:</span>
+                </label>
+                <input id="alamat" name="alamat" type="text" placeholder="Ketik disini" className="input border-base-content w-full" />
+              </div>
+              {/* angkatan */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="angkatan">
+                  <span className="label-text">Angkatan:</span>
+                </label>
+                <select id="angkatan" name="angkatan" className="select border-base-content w-full">
+                  <option disabled selected value={""}>
+                    Pilih Tahun Angkatan
+                  </option>
+                  {angkatan.map((angkatan, index) => (
+                    <option key={index} value={angkatan}>
+                      {angkatan}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Status */}
+              <div className="form-control w-full px-2">
+                <label className="label" htmlFor="status">
+                  <span className="label-text">Status Anggota:</span>
+                </label>
+                <select id="status" name="status" className="select border-base-content w-full">
+                  <option disabled selected>
+                    Pilih Status Anggota
+                  </option>
+                  {status.map((status, index) => (
+                    <option key={index} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="ml-2 mt-5 flex space-x-2">
+            <Link href="/database" className="btn btn-outline btn-neutral">
+              Batal
+            </Link>
+            <button className="btn btn-primary hover:scale-x-105" type="submit">
+              Simpan
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { Poppins } from "next/font/google";
 import { useTheme } from "../context/ThemeProvider";
 import Loading from "./loading";
+import Toastify from "../components/Toasitfy";
 
 const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <Suspense fallback={<Loading />}>
             <div className="p-3">{children}</div>
+            <Toastify />
           </Suspense>
         </div>
       </body>

@@ -7,7 +7,7 @@ CREATE TABLE "Anggota" (
     "no_telp" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "alamat" TEXT NOT NULL,
-    "angkatan" INTEGER NOT NULL,
+    "angkatan" TEXT NOT NULL,
     "status" TEXT NOT NULL,
 
     CONSTRAINT "Anggota_pkey" PRIMARY KEY ("id")

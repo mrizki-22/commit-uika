@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Anggota {
   id Int @id @default(autoincrement())
   nama String
@@ -19,6 +18,6 @@ model Anggota {
   no_telp String
   email String
   alamat String
-  angkatan Int
+  angkatan String
   status String
 }
