@@ -5,52 +5,67 @@ import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/app/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
+import Link from "next/link";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
+// export type Payment = {
+//   id: string;
+//   amount: number;
+//   status: "pending" | "processing" | "success" | "failed";
+//   email: string;
+// };
+
+export type Anggota = {
+  id: number;
+  nama: string;
+  fakultas: string;
+  prodi: string;
+  no_telp: string;
   email: string;
+  alamat: string;
+  angkatan: number;
+  status: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Anggota>[] = [
   {
-    accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    accessorKey: "nama",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nama" />,
+  },
+  {
+    accessorKey: "fakultas",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Fakultas" />,
+  },
+  {
+    accessorKey: "prodi",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Program Studi" />,
+  },
+  {
+    accessorKey: "no_telp",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="No Telp" />,
   },
   {
     accessorKey: "email",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
   },
   {
-    accessorKey: "amount",
-    header: ({ column }) => {
-      return (
-        <div className="text-right">
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-            Amount
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    accessorKey: "alamat",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Alamat" />,
+  },
+  {
+    accessorKey: "angkatan",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Angkatan" />,
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
   },
 
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const anggota = row.original;
 
       return (
         <DropdownMenu>
@@ -62,10 +77,12 @@ export const columns: ColumnDef<Payment>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-base-100">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Copy payment ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/database/edit/${anggota.id}`}>Edit</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/database/edit/${anggota.id}`}>Hapus</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

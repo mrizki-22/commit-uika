@@ -1,10 +1,12 @@
 "use client";
+import React, { Suspense } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "../components/Sidebar";
 import HeaderAdmin from "../components/HeaderAdmin";
 import { redirect } from "next/navigation";
 import { Poppins } from "next/font/google";
 import { useTheme } from "../context/ThemeProvider";
+import Loading from "./loading";
 
 const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
 
@@ -27,7 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="">
             <HeaderAdmin />
           </div>
-          <div className="p-3">{children}</div>
+          <Suspense fallback={<Loading />}>
+            <div className="p-3">{children}</div>
+          </Suspense>
         </div>
       </body>
     </html>

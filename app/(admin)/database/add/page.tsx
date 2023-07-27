@@ -1,7 +1,8 @@
 import Link from "next/link";
 import React from "react";
 import { BiSolidDashboard } from "react-icons/bi";
-import { BiLogoBlogger } from "react-icons/bi";
+import { BsFillDatabaseFill } from "react-icons/bs";
+import { MdAdd } from "react-icons/md";
 
 function Page() {
   return (
@@ -15,15 +16,21 @@ function Page() {
             </Link>
           </li>
           <li>
-            <Link className="flex items-center" href={"/admin-blog"}>
-              <BiLogoBlogger className="inline-block w-4 h-4 mr-2 stroke-current" />
-              <span className="leading-none">Blog</span>
+            <Link className="flex items-center" href={"/database"}>
+              <BsFillDatabaseFill className="inline-block w-4 h-4 mr-2 stroke-current" />
+              <span className="leading-none">Database</span>
+            </Link>
+          </li>
+          <li>
+            <Link className="flex items-center" href={"/database/add"}>
+              <MdAdd className="inline-block w-4 h-4 mr-2 stroke-current" />
+              <span className="leading-none">Tambah</span>
             </Link>
           </li>
         </ul>
       </div>
       <div>
-        <h1 className="font-semibold text-2xl">Blog Admin</h1>
+        <h1 className="font-semibold text-2xl">Tambah Data Anggota</h1>
       </div>
     </div>
   );

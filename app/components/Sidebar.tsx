@@ -38,6 +38,7 @@ function Sidebar() {
           <BiSolidDashboard className="text-2xl" />
           <p className="md:block hidden">Dashboard</p>
         </Link>
+        <span className="text-xs text-base-200 px-4 divider divider-horizontal">Menu</span>
         <Link
           href="/admin-blog"
           className={`flex items-center md:justify-start justify-center space-x-2 px-3 py-3 duration-200 ${theme === "light" ? "hover:bg-white hover:text-neutral " : "hover:bg-base-100 hover:text-base-content"} ${
