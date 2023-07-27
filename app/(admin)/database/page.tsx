@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { Anggota, columns } from "./columns";
 import { DataTable } from "./data-table";
 import { BiSolidDashboard } from "react-icons/bi";
@@ -7,7 +9,7 @@ import axios from "axios";
 
 async function getData(): Promise<Anggota[]> {
   try {
-    const response = await axios.get(`${process.env.BASE_URL}/api/anggota`);
+    const response = await axios.get(`/api/anggota`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -16,7 +18,17 @@ async function getData(): Promise<Anggota[]> {
 }
 
 export default async function Page() {
-  const data = await getData();
+  const [data, setData] = useState<Anggota[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  if (loading) {
+    getData().then((data) => {
+      setData(data);
+      setLoading(false);
+    });
+  }
+
+  // const data = await getData();
 
   return (
     <div className="container mx-auto">
