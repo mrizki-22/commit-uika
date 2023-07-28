@@ -53,7 +53,16 @@ function Page({ params }: { params: { id: string } }) {
   const status = ["Anggota Muda", "Anggota Biasa", "Dewan Alumni", "Anggota Kehormatan"];
   const router = useRouter();
   const [selectJurusan, setSelectJurusan] = useState<string[]>([]);
-  const [dataAnggota, setDataAnggota] = useState<Anggota>();
+  const [dataAnggota, setDataAnggota] = useState<Anggota>({
+    nama: "",
+    fakultas: "",
+    prodi: "",
+    no_telp: "",
+    email: "",
+    alamat: "",
+    angkatan: "",
+    status: "",
+  });
   const [loading, setLoading] = useState<boolean>(true);
 
   // get id
@@ -75,6 +84,12 @@ function Page({ params }: { params: { id: string } }) {
 
   //create handleSelect function to display jurusan based on fakultas id
   const handleSelect = (e: any): void => {
+    setDataAnggota({
+      ...dataAnggota,
+      fakultas: e.target.value,
+      prodi: "",
+    });
+
     const selectElement = e.target;
     const selectedIndex = selectElement.selectedIndex;
     const selectedOption = selectElement.options[selectedIndex];
@@ -85,36 +100,19 @@ function Page({ params }: { params: { id: string } }) {
   // create handle submit function
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
-    //create form data typescript
-    const formData = new FormData(e.target as HTMLFormElement);
-
-    //avoid null value at fakultas
-    const fakultasValue = formData.get("fakultas");
-    const fakultas = fakultasValue !== null ? fakultasValue : "";
-
-    //avoid null value at prodi
-    const prodiValue = formData.get("prodi");
-    const prodi = prodiValue !== null ? prodiValue : "";
-
-    //avoid null value at angkatan
-    const angkatanValue = formData.get("angkatan");
-    const angkatan = angkatanValue !== null ? angkatanValue : "";
-
-    //avoid null value at status
-    const statusValue = formData.get("status");
-    const status = statusValue !== null ? statusValue : "";
 
     try {
       const data: Anggota = {
-        nama: formData.get("nama") as string,
-        fakultas: fakultas as string,
-        prodi: prodi as string,
-        no_telp: formData.get("no_telp") as string,
-        email: formData.get("email") as string,
-        alamat: formData.get("alamat") as string,
-        angkatan: angkatan as string,
-        status: status as string,
+        nama: dataAnggota?.nama,
+        fakultas: dataAnggota?.fakultas,
+        prodi: dataAnggota?.prodi,
+        no_telp: dataAnggota?.no_telp,
+        email: dataAnggota?.email,
+        alamat: dataAnggota?.alamat,
+        angkatan: dataAnggota?.angkatan,
+        status: dataAnggota?.status,
       };
+
       const res = await axios.put(`/api/anggota/${id}`, data);
 
       if (res.status === 200) {
@@ -163,7 +161,21 @@ function Page({ params }: { params: { id: string } }) {
                 <label className="label" htmlFor="nama">
                   <span className="label-text">Nama Lengkap:</span>
                 </label>
-                <input id="nama" name="nama" type="text" placeholder="Ketik disini" className="input border-base-content w-full" required value={dataAnggota?.nama} />
+                <input
+                  id="nama"
+                  name="nama"
+                  type="text"
+                  placeholder="Ketik disini"
+                  className="input border-base-content w-full"
+                  required
+                  value={dataAnggota?.nama}
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      nama: e.target.value,
+                    })
+                  }
+                />
               </div>
 
               {/* Fakultas */}
@@ -186,14 +198,26 @@ function Page({ params }: { params: { id: string } }) {
               {/* Prodi */}
               <div className="form-control w-full px-2">
                 <label className="label" htmlFor="prodi">
-                  <span className="label-text">Program Studi:</span>
+                  <span className="label-text">
+                    Program Studi: <span className="text-xs font-extralight">Jika kosong, pilih ulang fakultas</span>{" "}
+                  </span>
                 </label>
-                <select id="prodi" name="prodi" className="select border-base-content w-full">
-                  <option disabled selected value={""}>
-                    {dataAnggota?.prodi !== "" ? dataAnggota?.prodi : "Pilih Prodi"}
+                <select
+                  id="prodi"
+                  name="prodi"
+                  className="select border-base-content w-full"
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      prodi: e.target.value,
+                    })
+                  }
+                >
+                  <option disabled selected>
+                    {dataAnggota?.prodi !== "" ? dataAnggota?.prodi : "Pilih Prodi (Jika kosong, harap pilih ulang fakultas)"}
                   </option>
                   {selectJurusan.map((jurusan, index) => (
-                    <option key={index} value={jurusan} selected={dataAnggota?.prodi === jurusan ? true : false}>
+                    <option key={index} value={jurusan}>
                       {jurusan}
                     </option>
                   ))}
@@ -204,7 +228,20 @@ function Page({ params }: { params: { id: string } }) {
                 <label className="label" htmlFor="no_telp">
                   <span className="label-text">No Telp:</span>
                 </label>
-                <input id="no_telp" name="no_telp" type="number" placeholder="Ketik disini" className="input border-base-content w-full" value={dataAnggota?.no_telp} />
+                <input
+                  id="no_telp"
+                  name="no_telp"
+                  type="number"
+                  placeholder="Ketik disini"
+                  className="input border-base-content w-full"
+                  value={dataAnggota?.no_telp}
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      no_telp: e.target.value,
+                    })
+                  }
+                />
               </div>
             </div>
 
@@ -214,7 +251,20 @@ function Page({ params }: { params: { id: string } }) {
                 <label className="label" htmlFor="email">
                   <span className="label-text">Email:</span>
                 </label>
-                <input id="email" name="email" type="text" placeholder="Ketik disini" className="input border-base-content w-full" value={dataAnggota?.email} />
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  placeholder="Ketik disini"
+                  className="input border-base-content w-full"
+                  value={dataAnggota?.email}
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      email: e.target.value,
+                    })
+                  }
+                />
               </div>
 
               {/* alamat */}
@@ -222,14 +272,37 @@ function Page({ params }: { params: { id: string } }) {
                 <label className="label" htmlFor="alamat">
                   <span className="label-text">Alamat:</span>
                 </label>
-                <input id="alamat" name="alamat" type="text" placeholder="Ketik disini" className="input border-base-content w-full" value={dataAnggota?.alamat} />
+                <input
+                  id="alamat"
+                  name="alamat"
+                  type="text"
+                  placeholder="Ketik disini"
+                  className="input border-base-content w-full"
+                  value={dataAnggota?.alamat}
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      alamat: e.target.value,
+                    })
+                  }
+                />
               </div>
               {/* angkatan */}
               <div className="form-control w-full px-2">
                 <label className="label" htmlFor="angkatan">
                   <span className="label-text">Angkatan:</span>
                 </label>
-                <select id="angkatan" name="angkatan" className="select border-base-content w-full">
+                <select
+                  id="angkatan"
+                  name="angkatan"
+                  className="select border-base-content w-full"
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      angkatan: e.target.value,
+                    })
+                  }
+                >
                   <option disabled selected>
                     {dataAnggota?.angkatan !== "" ? dataAnggota?.angkatan : "Pilih Tahun Angkatan"}
                   </option>
@@ -245,7 +318,17 @@ function Page({ params }: { params: { id: string } }) {
                 <label className="label" htmlFor="status">
                   <span className="label-text">Status Anggota:</span>
                 </label>
-                <select id="status" name="status" className="select border-base-content w-full">
+                <select
+                  id="status"
+                  name="status"
+                  className="select border-base-content w-full"
+                  onChange={(e) =>
+                    setDataAnggota({
+                      ...dataAnggota,
+                      status: e.target.value,
+                    })
+                  }
+                >
                   <option disabled selected>
                     {dataAnggota?.status !== "" ? dataAnggota?.status : "Pilih Status Anggota"}
                   </option>
@@ -262,7 +345,7 @@ function Page({ params }: { params: { id: string } }) {
             <Link href="/database" className="btn btn-outline btn-neutral">
               Batal
             </Link>
-            <button className="btn btn-primary hover:scale-x-105" type="submit">
+            <button className="btn btn-primary hover:scale-x-105" type="submit" disabled={loading}>
               Simpan
             </button>
           </div>
