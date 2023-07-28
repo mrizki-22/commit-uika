@@ -10,16 +10,26 @@ import { useRouter } from "next/navigation";
 
 type Anggota = {
   nama: string;
-  fakultas: string | null;
-  prodi: string | null;
-  no_telp: string | null;
-  email: string | null;
-  alamat: string | null;
-  angkatan: string | null;
-  status: string | null;
+  fakultas: string;
+  prodi: string;
+  no_telp: string;
+  email: string;
+  alamat: string;
+  angkatan: string;
+  status: string;
 };
 
-function Page() {
+async function getData(id: string) {
+  try {
+    const response = await axios.get(`/api/anggota/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Data tidak ditemukan");
+  }
+}
+
+function Page({ params }: { params: { id: string } }) {
   // data fakultas, jurusan, angkatan, status
   const fakultas = ["Fakultas Keguruan dan Ilmu Pendidikan", "Fakultas Hukum", "Fakultas Ekonomi dan Bisnis", "Fakultas Agama Islam", "Fakultas Teknik dan Sains", "Fakultas Ilmu Kesehatan"];
   const jurusan = [
@@ -41,9 +51,27 @@ function Page() {
   ];
   const angkatan = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"];
   const status = ["Anggota Muda", "Anggota Biasa", "Dewan Alumni", "Anggota Kehormatan"];
-
   const router = useRouter();
   const [selectJurusan, setSelectJurusan] = useState<string[]>([]);
+  const [dataAnggota, setDataAnggota] = useState<Anggota>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // get id
+  const id = params.id;
+  if (id === undefined) router.push("/database");
+
+  if (loading) {
+    getData(id)
+      .then((data) => {
+        setDataAnggota(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message);
+        router.push("/database");
+      });
+  }
 
   //create handleSelect function to display jurusan based on fakultas id
   const handleSelect = (e: any): void => {
@@ -87,14 +115,14 @@ function Page() {
         angkatan: angkatan as string,
         status: status as string,
       };
-      const res = await axios.post("/api/anggota", data);
+      const res = await axios.put(`/api/anggota/${id}`, data);
 
       if (res.status === 200) {
-        toast.success("Data berhasil ditambahkan");
+        toast.success("Data berhasil diedit");
         router.push("/database");
       }
     } catch (err) {
-      toast.error("Data gagal ditambahkan");
+      toast.error("Data gagal diedit");
       console.log(err);
     }
   };
@@ -124,7 +152,7 @@ function Page() {
         </ul>
       </div>
       <div>
-        <h1 className="font-semibold text-2xl">Tambah Data Anggota</h1>
+        <h1 className="font-semibold text-2xl">Edit Data Anggota</h1>
       </div>
       <div className="mt-5">
         <form onSubmit={handleSubmit}>
@@ -135,7 +163,7 @@ function Page() {
                 <label className="label" htmlFor="nama">
                   <span className="label-text">Nama Lengkap:</span>
                 </label>
-                <input id="nama" name="nama" type="text" placeholder="Ketik disini" className="input border-base-content w-full" required />
+                <input id="nama" name="nama" type="text" placeholder="Ketik disini" className="input border-base-content w-full" required value={dataAnggota?.nama} />
               </div>
 
               {/* Fakultas */}
@@ -144,11 +172,11 @@ function Page() {
                   <span className="label-text">Fakultas:</span>
                 </label>
                 <select id="fakultas" name="fakultas" className="select border-base-content w-full" onChange={handleSelect}>
-                  <option disabled selected value={""}>
-                    Pilih Fakultas
+                  <option disabled selected>
+                    {dataAnggota?.fakultas !== "" ? dataAnggota?.fakultas : "Pilih Fakultas"}
                   </option>
                   {fakultas.map((fakultas, index) => (
-                    <option key={index} value={fakultas} tabIndex={index}>
+                    <option key={index} value={fakultas} tabIndex={index} selected={dataAnggota?.fakultas === fakultas ? true : false}>
                       {fakultas}
                     </option>
                   ))}
@@ -162,10 +190,10 @@ function Page() {
                 </label>
                 <select id="prodi" name="prodi" className="select border-base-content w-full">
                   <option disabled selected value={""}>
-                    Pilih Prodi
+                    {dataAnggota?.prodi !== "" ? dataAnggota?.prodi : "Pilih Prodi"}
                   </option>
                   {selectJurusan.map((jurusan, index) => (
-                    <option key={index} value={jurusan}>
+                    <option key={index} value={jurusan} selected={dataAnggota?.prodi === jurusan ? true : false}>
                       {jurusan}
                     </option>
                   ))}
@@ -176,7 +204,7 @@ function Page() {
                 <label className="label" htmlFor="no_telp">
                   <span className="label-text">No Telp:</span>
                 </label>
-                <input id="no_telp" name="no_telp" type="number" placeholder="Ketik disini" className="input border-base-content w-full" />
+                <input id="no_telp" name="no_telp" type="number" placeholder="Ketik disini" className="input border-base-content w-full" value={dataAnggota?.no_telp} />
               </div>
             </div>
 
@@ -186,7 +214,7 @@ function Page() {
                 <label className="label" htmlFor="email">
                   <span className="label-text">Email:</span>
                 </label>
-                <input id="email" name="email" type="text" placeholder="Ketik disini" className="input border-base-content w-full" />
+                <input id="email" name="email" type="text" placeholder="Ketik disini" className="input border-base-content w-full" value={dataAnggota?.email} />
               </div>
 
               {/* alamat */}
@@ -194,7 +222,7 @@ function Page() {
                 <label className="label" htmlFor="alamat">
                   <span className="label-text">Alamat:</span>
                 </label>
-                <input id="alamat" name="alamat" type="text" placeholder="Ketik disini" className="input border-base-content w-full" />
+                <input id="alamat" name="alamat" type="text" placeholder="Ketik disini" className="input border-base-content w-full" value={dataAnggota?.alamat} />
               </div>
               {/* angkatan */}
               <div className="form-control w-full px-2">
@@ -202,11 +230,11 @@ function Page() {
                   <span className="label-text">Angkatan:</span>
                 </label>
                 <select id="angkatan" name="angkatan" className="select border-base-content w-full">
-                  <option disabled selected value={""}>
-                    Pilih Tahun Angkatan
+                  <option disabled selected>
+                    {dataAnggota?.angkatan !== "" ? dataAnggota?.angkatan : "Pilih Tahun Angkatan"}
                   </option>
                   {angkatan.map((angkatan, index) => (
-                    <option key={index} value={angkatan}>
+                    <option key={index} value={angkatan} selected={dataAnggota?.angkatan === angkatan ? true : false}>
                       {angkatan}
                     </option>
                   ))}
@@ -219,10 +247,10 @@ function Page() {
                 </label>
                 <select id="status" name="status" className="select border-base-content w-full">
                   <option disabled selected>
-                    Pilih Status Anggota
+                    {dataAnggota?.status !== "" ? dataAnggota?.status : "Pilih Status Anggota"}
                   </option>
                   {status.map((status, index) => (
-                    <option key={index} value={status}>
+                    <option key={index} value={status} selected={dataAnggota?.status === status ? true : false}>
                       {status}
                     </option>
                   ))}
