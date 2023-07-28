@@ -8,6 +8,7 @@ import { Poppins } from "next/font/google";
 import { useTheme } from "../context/ThemeProvider";
 import Loading from "./loading";
 import Toastify from "../components/Toasitfy";
+import { DataDeleteProvider } from "../context/DataDeleteContext";
 
 const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
 
@@ -23,19 +24,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <html lang="en" data-theme={theme}>
-      <body className={poppins.className}>
-        <Sidebar />
-        <div className="lg:ml-60 md:ml-40 ml-16">
-          <div className="">
-            <HeaderAdmin />
+    <DataDeleteProvider>
+      <html lang="en" data-theme={theme}>
+        <body className={poppins.className}>
+          <Sidebar />
+          <div className="lg:ml-60 md:ml-40 ml-16">
+            <div className="">
+              <HeaderAdmin />
+            </div>
+            <Suspense fallback={<Loading />}>
+              <div className="p-3">{children}</div>
+              <Toastify />
+            </Suspense>
           </div>
-          <Suspense fallback={<Loading />}>
-            <div className="p-3">{children}</div>
-            <Toastify />
-          </Suspense>
-        </div>
-      </body>
-    </html>
+        </body>
+      </html>
+    </DataDeleteProvider>
   );
 }

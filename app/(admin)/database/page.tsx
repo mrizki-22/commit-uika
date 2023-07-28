@@ -6,6 +6,10 @@ import { BiSolidDashboard } from "react-icons/bi";
 import { BsFillDatabaseFill } from "react-icons/bs";
 import Link from "next/link";
 import axios from "axios";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/app/components/ui/alert-dialog";
+import { DataDeleteContext, DataDeleteProvider } from "@/app/context/DataDeleteContext";
+import React from "react";
+import { toast } from "react-toastify";
 
 async function getData(): Promise<Anggota[]> {
   try {
@@ -20,6 +24,7 @@ async function getData(): Promise<Anggota[]> {
 export default async function Page() {
   const [data, setData] = useState<Anggota[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { idToDelete } = React.useContext<any>(DataDeleteContext);
 
   if (loading) {
     getData().then((data) => {
@@ -28,7 +33,23 @@ export default async function Page() {
     });
   }
 
-  // const data = await getData();
+  async function handleDelete(id: number) {
+    //axios
+    try {
+      const res = await axios.delete(`/api/anggota/${id}`);
+      //if status code 200
+      if (res.status == 200) {
+        toast.success("Data berhasil dihapus");
+        //set timeout 1s
+        setTimeout(() => {
+          setLoading(true);
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Data gagal dihapus");
+    }
+  }
 
   return (
     <div className="container mx-auto">
@@ -52,7 +73,23 @@ export default async function Page() {
         <h1 className="font-semibold text-2xl">Database Anggota</h1>
       </div>
       <div className="mt-5">
-        <DataTable columns={columns} data={data} />
+        <AlertDialog>
+          {/* Table */}
+          <DataTable columns={columns} data={data} />
+          {/* End Table */}
+          <AlertDialogContent className="bg-base-100">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
+              <AlertDialogDescription>Data akan dihapus secara permanen dari database</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction className="bg-error hover:bg-red-500" onClick={() => handleDelete(idToDelete)}>
+                Hapus
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

@@ -1,11 +1,13 @@
 "use client";
-
+import { useContext } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/app/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
+import { DataDeleteContext } from "@/app/context/DataDeleteContext";
 
 export type Anggota = {
   id: number;
@@ -58,13 +60,14 @@ export const columns: ColumnDef<Anggota>[] = [
     cell: ({ row }) => {
       const anggota = row.original;
       const router = useRouter();
+      const { idToDelete, setIdToDelete } = useContext<any>(DataDeleteContext);
 
       function onClickEdit(id: number) {
         router.push(`/database/edit/${id}`);
       }
 
       function onClickDelete(id: number) {
-        alert("Data berhasil dihapus");
+        setIdToDelete(id);
       }
 
       return (
@@ -78,7 +81,9 @@ export const columns: ColumnDef<Anggota>[] = [
           <DropdownMenuContent align="end" className="bg-base-100">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => onClickEdit(anggota.id)}>Edit</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onClickDelete(anggota.id)}>Hapus</DropdownMenuItem>
+            <DropdownMenuItem>
+              <AlertDialogTrigger onClick={() => onClickDelete(anggota.id)}>Hapus</AlertDialogTrigger>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

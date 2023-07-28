@@ -38,3 +38,20 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     return NextResponse.json(e, { status: 500 });
   }
 }
+
+// delete anggota by id
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+  const id = params.id;
+  try {
+    const idAnggota = parseInt(id);
+    const data = await prisma.anggota.delete({
+      where: {
+        id: idAnggota,
+      },
+    });
+    return NextResponse.json("Success", { status: 200 });
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json(e, { status: 500 });
+  }
+}
