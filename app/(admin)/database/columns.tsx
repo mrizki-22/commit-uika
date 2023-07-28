@@ -1,13 +1,13 @@
 "use client";
 import { useContext } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/app/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { DataDeleteContext } from "@/app/context/DataDeleteContext";
+import Link from "next/link";
 
 export type Anggota = {
   id: number;
@@ -59,12 +59,7 @@ export const columns: ColumnDef<Anggota>[] = [
     id: "actions",
     cell: ({ row }) => {
       const anggota = row.original;
-      const router = useRouter();
       const { idToDelete, setIdToDelete } = useContext<any>(DataDeleteContext);
-
-      function onClickEdit(id: number) {
-        router.push(`/database/edit/${id}`);
-      }
 
       function onClickDelete(id: number) {
         setIdToDelete(id);
@@ -80,7 +75,9 @@ export const columns: ColumnDef<Anggota>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-base-100">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onClickEdit(anggota.id)}>Edit</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/database/edit/${anggota.id}`}>Edit</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <AlertDialogTrigger onClick={() => onClickDelete(anggota.id)}>Hapus</AlertDialogTrigger>
             </DropdownMenuItem>
