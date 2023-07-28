@@ -76,10 +76,14 @@ export const columns: ColumnDef<Anggota>[] = [
           <DropdownMenuContent align="end" className="bg-base-100">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link href={`/database/edit/${anggota.id}`}>Edit</Link>
+              <Link className="w-full" href={`/database/edit/${anggota.id}`}>
+                Edit
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <AlertDialogTrigger onClick={() => onClickDelete(anggota.id)}>Hapus</AlertDialogTrigger>
+              <AlertDialogTrigger className="w-full text-left" onClick={() => onClickDelete(anggota.id)}>
+                Hapus
+              </AlertDialogTrigger>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
