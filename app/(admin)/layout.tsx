@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   if (status === "loading") return null;
   if (status === "unauthenticated") {
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   return (
