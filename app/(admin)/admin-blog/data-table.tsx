@@ -7,6 +7,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
 import { DataTablePagination } from "./data-table-pagination";
 import { MdAdd } from "react-icons/md";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -17,6 +20,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -34,6 +39,33 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       columnVisibility,
     },
   });
+
+  async function handleAddArticleBtn() {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `/api/blog`,
+        {},
+        {
+          headers: {
+            "commit-api-key": process.env.NEXT_PUBLIC_COMMIT_API_KEY,
+          },
+        }
+      );
+      //if status code 201
+      if (res.status == 201) {
+        toast.success("Template artikel berhasil dibuat");
+        //set timeout 1s
+        setTimeout(() => {
+          router.push(`/admin-blog/${res.data.slug}`);
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Template gagal dibuat");
+    }
+    setLoading(false);
+  }
 
   return (
     <div>
@@ -65,7 +97,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </div>
         </div>
         <div>
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleAddArticleBtn} disabled={loading}>
             <p>Tambah Artikel</p>
             <MdAdd className="text-lg" />
           </Button>
