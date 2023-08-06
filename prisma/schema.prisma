@@ -21,3 +21,25 @@ model Anggota {
   angkatan String
   status String
 }
+
+model Kategori {
+  id Int @id @default(autoincrement())
+  nama String
+  slug String
+  Artikel Artikel[]
+}
+
+model Artikel {
+  id Int @id @default(autoincrement())
+  judul String
+  slug String @unique
+  penulis String?
+  konten String?
+  cover_img String?
+  kategori_id Int
+  kategori Kategori @relation(fields: [kategori_id], references: [id])
+  is_published Boolean @default(false)
+  published_at DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

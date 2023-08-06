@@ -17,15 +17,11 @@ import {
 	Underline
 } from '@ckeditor/ckeditor5-basic-styles';
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote';
-import { CloudServices } from '@ckeditor/ckeditor5-cloud-services';
 import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
-import { FindAndReplace } from '@ckeditor/ckeditor5-find-and-replace';
 import { FontBackgroundColor, FontColor, FontFamily, FontSize } from '@ckeditor/ckeditor5-font';
-import { Heading, Title } from '@ckeditor/ckeditor5-heading';
+import { Heading } from '@ckeditor/ckeditor5-heading';
 import { Highlight } from '@ckeditor/ckeditor5-highlight';
-import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
-import { GeneralHtmlSupport } from '@ckeditor/ckeditor5-html-support';
 import {
 	AutoImage,
 	Image,
@@ -40,7 +36,6 @@ import { Indent, IndentBlock } from '@ckeditor/ckeditor5-indent';
 import { AutoLink, Link, LinkImage } from '@ckeditor/ckeditor5-link';
 import { List } from '@ckeditor/ckeditor5-list';
 import { MediaEmbed, MediaEmbedToolbar } from '@ckeditor/ckeditor5-media-embed';
-import { Mention } from '@ckeditor/ckeditor5-mention';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { PasteFromOffice } from '@ckeditor/ckeditor5-paste-from-office';
 import { RemoveFormat } from '@ckeditor/ckeditor5-remove-format';
@@ -48,9 +43,12 @@ import { SelectAll } from '@ckeditor/ckeditor5-select-all';
 import {
 	SpecialCharacters,
 	SpecialCharactersArrows,
+	SpecialCharactersCurrency,
+	SpecialCharactersEssentials,
+	SpecialCharactersLatin,
+	SpecialCharactersMathematical,
 	SpecialCharactersText
 } from '@ckeditor/ckeditor5-special-characters';
-import { Style } from '@ckeditor/ckeditor5-style';
 import {
 	Table,
 	TableCaption,
@@ -60,7 +58,7 @@ import {
 	TableToolbar
 } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
-import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
+import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { WordCount } from '@ckeditor/ckeditor5-word-count';
 
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
@@ -73,22 +71,17 @@ class Editor extends ClassicEditor {
 		AutoLink,
 		Autoformat,
 		Autosave,
-		Base64UploadAdapter,
 		BlockQuote,
 		Bold,
-		CloudServices,
 		Code,
 		CodeBlock,
 		Essentials,
-		FindAndReplace,
 		FontBackgroundColor,
 		FontColor,
 		FontFamily,
 		FontSize,
-		GeneralHtmlSupport,
 		Heading,
 		Highlight,
-		HorizontalLine,
 		Image,
 		ImageCaption,
 		ImageInsert,
@@ -104,15 +97,18 @@ class Editor extends ClassicEditor {
 		List,
 		MediaEmbed,
 		MediaEmbedToolbar,
-		Mention,
 		Paragraph,
 		PasteFromOffice,
 		RemoveFormat,
 		SelectAll,
+		SimpleUploadAdapter,
 		SpecialCharacters,
 		SpecialCharactersArrows,
+		SpecialCharactersCurrency,
+		SpecialCharactersEssentials,
+		SpecialCharactersLatin,
+		SpecialCharactersMathematical,
 		SpecialCharactersText,
-		Style,
 		Subscript,
 		Superscript,
 		Table,
@@ -122,7 +118,6 @@ class Editor extends ClassicEditor {
 		TableProperties,
 		TableToolbar,
 		TextTransformation,
-		Title,
 		Underline,
 		WordCount
 	];
@@ -130,13 +125,17 @@ class Editor extends ClassicEditor {
 	public static override defaultConfig = {
 		toolbar: {
 			items: [
-				'heading',
-				'style',
+				'undo',
+				'redo',
 				'|',
-				'fontSize',
+				'heading',
+				'|',
 				'fontFamily',
+				'fontSize',
 				'fontColor',
 				'fontBackgroundColor',
+				'|',
+				'alignment',
 				'bold',
 				'italic',
 				'underline',
@@ -144,31 +143,24 @@ class Editor extends ClassicEditor {
 				'highlight',
 				'removeFormat',
 				'|',
-				'alignment',
-				'numberedList',
 				'bulletedList',
+				'numberedList',
 				'outdent',
 				'indent',
 				'|',
-				'subscript',
-				'superscript',
+				'imageInsert',
 				'code',
 				'codeBlock',
-				'imageUpload',
-				'imageInsert',
 				'blockQuote',
+				'subscript',
+				'superscript',
 				'insertTable',
 				'mediaEmbed',
-				'specialCharacters',
-				'|',
 				'selectAll',
-				'findAndReplace',
-				'horizontalLine',
-				'undo',
-				'redo'
+				'specialCharacters'
 			]
 		},
-		language: 'id',
+		language: 'en',
 		image: {
 			toolbar: [
 				'imageTextAlternative',

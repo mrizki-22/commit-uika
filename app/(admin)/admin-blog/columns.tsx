@@ -9,56 +9,49 @@ import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { DataIdContext } from "@/app/context/DataIdContext";
 import Link from "next/link";
 
-export type Anggota = {
+export type Artikel = {
   id: number;
-  nama: string;
-  fakultas: string;
-  prodi: string;
-  no_telp: string;
-  email: string;
-  alamat: string;
-  angkatan: string;
-  status: string;
+  judul: string;
+  slug: string;
+  penulis: string;
+  // konten: string;
+  kategori: string;
+  is_published: boolean;
+  published_at: Date;
+  created_at: Date;
+  updated_at: Date;
 };
 
-export const columns: ColumnDef<Anggota>[] = [
+export const columns: ColumnDef<Artikel>[] = [
   {
-    accessorKey: "nama",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Nama" />,
+    accessorKey: "judul",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Judul" />,
   },
   {
-    accessorKey: "fakultas",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Fakultas" />,
+    accessorKey: "penulis",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Penulis" />,
   },
   {
-    accessorKey: "prodi",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Program Studi" />,
+    accessorKey: "kategori",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Kategori" />,
   },
   {
-    accessorKey: "no_telp",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="No Telp" />,
+    accessorKey: "created_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created at" />,
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
+    accessorKey: "updated_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Terakhir diedit" />,
   },
   {
-    accessorKey: "alamat",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Alamat" />,
-  },
-  {
-    accessorKey: "angkatan",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Angkatan" />,
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    accessorKey: "published_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Diterbitkan" />,
   },
 
   {
     id: "actions",
     cell: ({ row }) => {
-      const anggota = row.original;
+      const artikel = row.original;
       const { dataId, setDataId } = useContext<any>(DataIdContext);
 
       function onClickDelete(id: number) {
@@ -76,12 +69,12 @@ export const columns: ColumnDef<Anggota>[] = [
           <DropdownMenuContent align="end" className="bg-base-100">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link className="w-full" href={`/database/edit/${anggota.id}`}>
+              <Link className="w-full" href={`/database/edit/${artikel.id}`}>
                 Edit
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <AlertDialogTrigger className="w-full text-left" onClick={() => onClickDelete(anggota.id)}>
+              <AlertDialogTrigger className="w-full text-left" onClick={() => onClickDelete(artikel.id)}>
                 Hapus
               </AlertDialogTrigger>
             </DropdownMenuItem>

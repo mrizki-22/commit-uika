@@ -7,7 +7,7 @@ import { BsFillDatabaseFill } from "react-icons/bs";
 import Link from "next/link";
 import axios from "axios";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/app/components/ui/alert-dialog";
-import { DataDeleteContext, DataDeleteProvider } from "@/app/context/DataDeleteContext";
+import { DataIdContext } from "@/app/context/DataIdContext";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -21,10 +21,10 @@ async function getData(): Promise<Anggota[]> {
   }
 }
 
-export default async function Page() {
+export default function Page() {
   const [data, setData] = useState<Anggota[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { idToDelete } = React.useContext<any>(DataDeleteContext);
+  const { dataId } = React.useContext<any>(DataIdContext);
 
   if (loading) {
     getData().then((data) => {
@@ -84,7 +84,7 @@ export default async function Page() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Batal</AlertDialogCancel>
-              <AlertDialogAction className="bg-error hover:bg-red-500" onClick={() => handleDelete(idToDelete)}>
+              <AlertDialogAction className="bg-error hover:bg-red-500" onClick={() => handleDelete(dataId)}>
                 Hapus
               </AlertDialogAction>
             </AlertDialogFooter>
