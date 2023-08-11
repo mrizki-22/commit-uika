@@ -6,7 +6,7 @@ import { BiSolidDashboard } from "react-icons/bi";
 import { BsFillDatabaseFill } from "react-icons/bs";
 import Link from "next/link";
 import axios from "axios";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/app/components/ui/alert-dialog";
+import ModalDialog from "@/app/components/ModalDialog";
 import { DataIdContext } from "@/app/context/DataIdContext";
 import React from "react";
 import { toast } from "react-toastify";
@@ -73,23 +73,9 @@ export default function Page() {
         <h1 className="font-semibold text-2xl">Database Anggota</h1>
       </div>
       <div className="mt-5">
-        <AlertDialog>
-          {/* Table */}
+        <ModalDialog title="Hapus Data" description="Apakah anda yakin?" action="Hapus" onAction={() => handleDelete(dataId)}>
           <DataTable columns={columns} data={data} />
-          {/* End Table */}
-          <AlertDialogContent className="bg-base-100">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
-              <AlertDialogDescription>Data akan dihapus secara permanen dari database</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Batal</AlertDialogCancel>
-              <AlertDialogAction className="bg-error hover:bg-red-500" onClick={() => handleDelete(dataId)}>
-                Hapus
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        </ModalDialog>
       </div>
     </div>
   );
