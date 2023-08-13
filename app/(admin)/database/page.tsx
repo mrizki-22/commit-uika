@@ -73,7 +73,7 @@ export default function Page() {
         <h1 className="font-semibold text-2xl">Database Anggota</h1>
       </div>
       <div className="mt-5">
-        <ModalDialog title="Hapus Data" description="Apakah anda yakin?" action="Hapus" onAction={() => handleDelete(dataId)}>
+        <ModalDialog title="Hapus Data" description="Apakah anda yakin?" action="Hapus" onAction={() => handleDelete(dataId)} btn="danger">
           <DataTable columns={columns} data={data} />
         </ModalDialog>
       </div>
