@@ -29,7 +29,9 @@ model Artikel {
   slug String? @unique
   penulis String?
   konten String?
+  teks_pratinjau String?
   cover_img String?
+  cover_img_url String?
   is_published Boolean @default(false)
   published_at DateTime?
   created_at DateTime @default(now())

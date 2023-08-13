@@ -26,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <DataIdProvider>
       <html lang="en" data-theme={theme}>
+        <head>{/* <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script> */}</head>
         <body className={poppins.className}>
           <Sidebar />
           <div className="lg:ml-60 md:ml-40 ml-16">

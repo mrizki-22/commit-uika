@@ -22,6 +22,7 @@ import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { FontBackgroundColor, FontColor, FontFamily, FontSize } from '@ckeditor/ckeditor5-font';
 import { Heading } from '@ckeditor/ckeditor5-heading';
 import { Highlight } from '@ckeditor/ckeditor5-highlight';
+import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
 import {
 	AutoImage,
 	Image,
@@ -32,7 +33,7 @@ import {
 	ImageToolbar,
 	ImageUpload
 } from '@ckeditor/ckeditor5-image';
-import { Indent, IndentBlock } from '@ckeditor/ckeditor5-indent';
+import { Indent } from '@ckeditor/ckeditor5-indent';
 import { AutoLink, Link, LinkImage } from '@ckeditor/ckeditor5-link';
 import { List } from '@ckeditor/ckeditor5-list';
 import { MediaEmbed, MediaEmbedToolbar } from '@ckeditor/ckeditor5-media-embed';
@@ -58,7 +59,7 @@ import {
 	TableToolbar
 } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
-import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
+import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { WordCount } from '@ckeditor/ckeditor5-word-count';
 
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
@@ -71,6 +72,7 @@ class Editor extends ClassicEditor {
 		AutoLink,
 		Autoformat,
 		Autosave,
+		Base64UploadAdapter,
 		BlockQuote,
 		Bold,
 		Code,
@@ -82,6 +84,7 @@ class Editor extends ClassicEditor {
 		FontSize,
 		Heading,
 		Highlight,
+		HorizontalLine,
 		Image,
 		ImageCaption,
 		ImageInsert,
@@ -90,7 +93,6 @@ class Editor extends ClassicEditor {
 		ImageToolbar,
 		ImageUpload,
 		Indent,
-		IndentBlock,
 		Italic,
 		Link,
 		LinkImage,
@@ -101,7 +103,6 @@ class Editor extends ClassicEditor {
 		PasteFromOffice,
 		RemoveFormat,
 		SelectAll,
-		SimpleUploadAdapter,
 		SpecialCharacters,
 		SpecialCharactersArrows,
 		SpecialCharactersCurrency,
@@ -127,15 +128,13 @@ class Editor extends ClassicEditor {
 			items: [
 				'undo',
 				'redo',
-				'|',
 				'heading',
 				'|',
-				'fontFamily',
 				'fontSize',
+				'fontFamily',
 				'fontColor',
 				'fontBackgroundColor',
 				'|',
-				'alignment',
 				'bold',
 				'italic',
 				'underline',
@@ -143,8 +142,9 @@ class Editor extends ClassicEditor {
 				'highlight',
 				'removeFormat',
 				'|',
-				'bulletedList',
+				'alignment',
 				'numberedList',
+				'bulletedList',
 				'outdent',
 				'indent',
 				'|',
@@ -152,12 +152,13 @@ class Editor extends ClassicEditor {
 				'code',
 				'codeBlock',
 				'blockQuote',
-				'subscript',
-				'superscript',
+				'specialCharacters',
 				'insertTable',
-				'mediaEmbed',
+				'superscript',
+				'subscript',
 				'selectAll',
-				'specialCharacters'
+				'mediaEmbed',
+				'horizontalLine'
 			]
 		},
 		language: 'en',

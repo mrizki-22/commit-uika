@@ -6,10 +6,11 @@ interface ModalDialogProps {
   title: string;
   description: string;
   action: string;
+  btn: "danger" | "info";
   onAction: () => void;
 }
 
-const ModalDialog: React.FC<ModalDialogProps> = ({ title, description, action, onAction, children }) => {
+const ModalDialog: React.FC<ModalDialogProps> = ({ title, description, action, onAction, btn, children }) => {
   return (
     <AlertDialog>
       {children}
@@ -20,7 +21,7 @@ const ModalDialog: React.FC<ModalDialogProps> = ({ title, description, action, o
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Batal</AlertDialogCancel>
-          <AlertDialogAction className="bg-error hover:bg-red-500" onClick={onAction}>
+          <AlertDialogAction className={`${btn === "danger" && "bg-error hover:bg-red-500"} ${btn === "info" && "bg-info hover:bg-blue-500"}`} onClick={onAction}>
             {action}
           </AlertDialogAction>
         </AlertDialogFooter>

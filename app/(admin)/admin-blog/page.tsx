@@ -10,35 +10,23 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DataIdContext } from "@/app/context/DataIdContext";
 import React from "react";
 import { toast } from "react-toastify";
+import ModalDialog from "@/app/components/ModalDialog";
 
 async function getData(): Promise<Artikel[]> {
-  // try {
-  //   const response = await axios.get(`/api/anggota`);
-  //   return response.data;
-  // } catch (error) {
-  //   console.log(error);
-  //   return [];
-  // }
-  return [
-    {
-      id: 1,
-      judul: "Judul 1",
-      slug: "slug-1",
-      penulis: "Penulis 1",
-      // konten: string;
-      kategori: "Kategori 1",
-      is_published: true,
-      published_at: new Date(),
-      created_at: new Date(),
-      updated_at: new Date(),
-    },
-  ];
+  try {
+    const response = await axios.get(`/api/blog`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
 
 export default function Page() {
   const [data, setData] = useState<Artikel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { dataId } = React.useContext<any>(DataIdContext);
+  const { dataId, action } = React.useContext<any>(DataIdContext);
+  const commitApiKey = process.env.NEXT_PUBLIC_COMMIT_API_KEY;
 
   if (loading) {
     getData().then((data) => {
@@ -47,22 +35,109 @@ export default function Page() {
     });
   }
 
-  async function handleDelete(id: number) {
-    //axios
-    // try {
-    //   const res = await axios.delete(`/api/anggota/${id}`);
-    //   //if status code 200
-    //   if (res.status == 200) {
-    //     toast.success("Data berhasil dihapus");
-    //     //set timeout 1s
-    //     setTimeout(() => {
-    //       setLoading(true);
-    //     }, 1000);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   toast.error("Data gagal dihapus");
-    // }
+  async function handleDelete(slug: string) {
+    try {
+      const res = await axios.delete(`/api/blog/${slug}`, {
+        headers: {
+          "commit-api-key": commitApiKey,
+        },
+      });
+      //if status code 200
+      if (res.status == 200) {
+        toast.success("Data berhasil dihapus");
+        //set timeout 1s
+        setTimeout(() => {
+          setLoading(true);
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Data gagal dihapus");
+    }
+  }
+
+  async function handlePublish(slug: string) {
+    try {
+      const res = await axios.post(
+        `/api/blog/${slug}/publish`,
+        {},
+        {
+          headers: {
+            "commit-api-key": commitApiKey,
+          },
+        }
+      );
+      //if status code 200
+      if (res.status == 200) {
+        toast.success("Artikel berhasil dipublikasi");
+        //set timeout 1s
+        setTimeout(() => {
+          setLoading(true);
+        }, 1000);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Artikel gagal dipublikasi");
+    }
+  }
+
+  async function handleUnpublish(slug: string) {
+    try {
+      const res = await axios.post(
+        `/api/blog/${slug}/publish`,
+        {},
+        {
+          headers: {
+            "commit-api-key": commitApiKey,
+          },
+        }
+      );
+      //if status code 200
+      if (res.status == 200) {
+        toast.success("Berhasil membatalkan publikasi");
+        //set timeout 1s
+        setTimeout(() => {
+          setLoading(true);
+        }, 1000);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Gagal membatalkan publikasi");
+    }
+  }
+
+  var modalDialogProps = {
+    title: "",
+    description: "",
+    action: "",
+    btn: "danger",
+    onAction: function () {},
+  };
+  //set modal dialog props
+  if (action == "delete") {
+    modalDialogProps = {
+      title: "Hapus Artikel",
+      description: "Apakah anda yakin?",
+      action: "Hapus",
+      btn: "danger",
+      onAction: () => handleDelete(dataId),
+    };
+  } else if (action == "publish") {
+    modalDialogProps = {
+      title: "Publish Artikel",
+      description: "Apakah anda yakin?",
+      action: "Publish",
+      btn: "info",
+      onAction: () => handlePublish(dataId),
+    };
+  } else if (action == "unpublish") {
+    modalDialogProps = {
+      title: "Batalkan Publikasi Artikel",
+      description: "Apakah anda yakin?",
+      action: "Unpublish",
+      btn: "info",
+      onAction: () => handleUnpublish(dataId),
+    };
   }
 
   return (
@@ -87,23 +162,9 @@ export default function Page() {
         <h1 className="font-semibold text-2xl">Blog Admin</h1>
       </div>
       <div className="mt-5">
-        <AlertDialog>
-          {/* Table */}
+        <ModalDialog title={modalDialogProps.title} description={modalDialogProps.description} action={modalDialogProps.action} btn={modalDialogProps.btn == "danger" ? "danger" : "info"} onAction={modalDialogProps.onAction}>
           <DataTable columns={columns} data={data} />
-          {/* End Table */}
-          <AlertDialogContent className="bg-base-100">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
-              <AlertDialogDescription>Data akan dihapus secara permanen dari database</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Batal</AlertDialogCancel>
-              <AlertDialogAction className="bg-error hover:bg-red-500" onClick={() => handleDelete(dataId)}>
-                Hapus
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        </ModalDialog>
       </div>
     </div>
   );

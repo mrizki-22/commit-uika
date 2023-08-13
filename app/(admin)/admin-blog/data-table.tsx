@@ -6,7 +6,7 @@ import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRende
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
 import { DataTablePagination } from "./data-table-pagination";
-import { MdAdd } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       <div className="flex py-4 justify-between">
         <div className="flex space-x-2">
           <div className="w-full">
-            <Input placeholder="Cari artikel..." value={(table.getColumn("judul")?.getFilterValue() as string) ?? ""} onChange={(event) => table.getColumn("nama")?.setFilterValue(event.target.value)} className="max-w-sm" />
+            <Input placeholder="Cari artikel..." value={(table.getColumn("judul")?.getFilterValue() as string) ?? ""} onChange={(event) => table.getColumn("judul")?.setFilterValue(event.target.value)} className="max-w-sm" />
           </div>
           <div>
             <DropdownMenu>
@@ -98,8 +98,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </div>
         <div>
           <Button variant="outline" onClick={handleAddArticleBtn} disabled={loading}>
-            <p>Tambah Artikel</p>
-            <MdAdd className="text-lg" />
+            <p>Tulis Artikel</p>
+            <MdEdit className="text-lg ml-2" />
           </Button>
         </div>
       </div>

@@ -4,22 +4,21 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/app/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/app/components/ui/dropdown-menu";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { DataIdContext } from "@/app/context/DataIdContext";
 import Link from "next/link";
+import { MdPublish, MdUnpublished } from "react-icons/md";
 
 export type Artikel = {
   id: number;
   judul: string;
   slug: string;
   penulis: string;
-  // konten: string;
-  kategori: string;
   is_published: boolean;
-  published_at: Date;
-  created_at: Date;
-  updated_at: Date;
+  published_at: String;
+  created_at: String;
+  updated_at: String;
 };
 
 export const columns: ColumnDef<Artikel>[] = [
@@ -32,12 +31,8 @@ export const columns: ColumnDef<Artikel>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Penulis" />,
   },
   {
-    accessorKey: "kategori",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Kategori" />,
-  },
-  {
     accessorKey: "created_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Created at" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Dibuat pada" />,
   },
   {
     accessorKey: "updated_at",
@@ -53,9 +48,11 @@ export const columns: ColumnDef<Artikel>[] = [
     cell: ({ row }) => {
       const artikel = row.original;
       const { dataId, setDataId } = useContext<any>(DataIdContext);
+      const { action, setAction } = useContext<any>(DataIdContext);
 
-      function onClickDelete(id: number) {
-        setDataId(id);
+      function onClickAction(slug: string, action: string) {
+        setDataId(slug);
+        setAction(action);
       }
 
       return (
@@ -69,12 +66,26 @@ export const columns: ColumnDef<Artikel>[] = [
           <DropdownMenuContent align="end" className="bg-base-100">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link className="w-full" href={`/database/edit/${artikel.id}`}>
+              {!artikel.is_published ? (
+                <AlertDialogTrigger className="w-full text-left flex items-center space-x-2" onClick={() => onClickAction(artikel.slug, "publish")}>
+                  <p>Publish</p>
+                  <MdPublish className="inline-block w-4 h-4 mr-2 stroke-current" />
+                </AlertDialogTrigger>
+              ) : (
+                <AlertDialogTrigger className="w-full text-left flex items-center space-x-2" onClick={() => onClickAction(artikel.slug, "unpublish")}>
+                  <p>Cancel Publish</p>
+                  <MdUnpublished className="inline-block w-4 h-4 mr-2 stroke-current" />
+                </AlertDialogTrigger>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled={artikel.is_published ? true : false}>
+              <Link className="w-full" href={`/admin-blog/${artikel.slug}`}>
                 Edit
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <AlertDialogTrigger className="w-full text-left" onClick={() => onClickDelete(artikel.id)}>
+              <AlertDialogTrigger className="w-full text-left" onClick={() => onClickAction(artikel.slug, "delete")}>
                 Hapus
               </AlertDialogTrigger>
             </DropdownMenuItem>
