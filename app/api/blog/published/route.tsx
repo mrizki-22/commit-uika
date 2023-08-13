@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import moment from "moment";
 import "moment/locale/id";
 
 moment.locale("id");
-
-const prisma = new PrismaClient();
 
 //get all published article
 export async function GET() {

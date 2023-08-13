@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import slugify from "slugify";
 import moment from "moment";
 import "moment/locale/id";
 
 moment.locale("id");
-
-const prisma = new PrismaClient();
 
 // create article template
 export async function POST(request: Request) {

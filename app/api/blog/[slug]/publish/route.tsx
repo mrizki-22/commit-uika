@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 // update is_published to opposite value (publishing and unpublishing article)
 export async function POST(request: Request, { params }: { params: { slug: string } }) {
