@@ -17,11 +17,16 @@ export async function POST(request: Request) {
 }
 
 //Get All Anggota
-export async function GET() {
-  try {
-    const data = await prisma.anggota.findMany();
-    return NextResponse.json(data, { status: 200 });
-  } catch (e) {
-    return NextResponse.json(e, { status: 500 });
+export async function GET(request: Request) {
+  const key = request.headers.get("commit-api-key");
+  if (key === process.env.COMMIT_API_KEY) {
+    try {
+      const data = await prisma.anggota.findMany();
+      return NextResponse.json(data, { status: 200 });
+    } catch (e) {
+      return NextResponse.json(e, { status: 500 });
+    }
+  } else {
+    return NextResponse.json({ message: "API key tidak ditemukan" }, { status: 500 });
   }
 }
